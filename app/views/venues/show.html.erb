@@ -1,0 +1,21 @@
+<h1>Search venues</h1>
+
+<%= form_for :term, url: search_path, method: :get do |form| %>
+	<p>
+		Venues near
+    <%= text_field_tag :term, params[:term] %>
+    <%= submit_tag "Search", name: nil %>
+	</p>
+<% end %>
+
+<div id='search-results'>
+	<% @venues.each do |venue| %>
+	  <div>
+	    <h3><%= venue.name %></h3>
+	    <% if venue.address %>
+	      <p>Address: <%= venue.address %></p>
+	    <% end %>
+			<p>Distance: <%= number_to_human(venue.distance(@location), precision: 2, units: {unit: 'km'}) %></p>
+		</div>
+	<% end %>
+</div>
