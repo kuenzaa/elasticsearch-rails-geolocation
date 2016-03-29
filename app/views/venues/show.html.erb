@@ -1,8 +1,13 @@
 <h1>Search venues</h1>
 
 <% if @total_count %>
-	<h3><%= @total_count %> venues found near <%= params[:term] %></h3>
-<% end %>
+	<% if @category %>
+		<h3><%= "#{@total_count} #{@category} found near #{params[:term]}" %></h3>
+		<%= link_to 'All venues', search_path(term: params[:term]) %>
+	<% else %>
+		<h3><%= @total_count %> venues found near <%= params[:term] %></h3>
+	<% end %>
+<% end%>
 
 <%= form_for :term, url: search_path, method: :get do |form| %>
 	<p>
@@ -22,6 +27,11 @@
 	      <p>Address: <%= venue.address %></p>
 	    <% end %>
 			<p>Distance: <%= number_to_human(venue.distance(@location), precision: 2, units: {unit: 'km'}) %></p>
+			<p>Category:
+				<% venue.categories.each do |c| %>
+					<%= link_to c.name, search_path(term: params[:term], category: c.name) %>
+				<% end %>
+			</p>
 		</div>
 	<% end %>
 </div>
