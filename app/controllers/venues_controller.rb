@@ -3,12 +3,22 @@ class VenuesController < ApplicationController
     if params[:term].nil?
       @venues = []
     else
-      term = params[:term]
+      @location = address_to_geolocation params[:term]
 
+      scope = search_by_location
+      @total_count = scope.total_count
+      @venues = scope.load
+    end
+  end
+
+  private
+    def address_to_geolocation term
       res = Geocoder.search(term)
-      @location = res.first.geometry['location'] # lat / lng
+      res.first.geometry['location'] # lat / lng
+    end
 
-      scope = VenuesIndex
+    def search_by_location
+      VenuesIndex
         .filter {match_all}
         .filter(geo_distance: {
           distance: "2km",
@@ -17,9 +27,5 @@ class VenuesController < ApplicationController
         .order(_geo_distance: {
             location: {lat: @location['lat'], lon: @location['lng']}
           })
-      @total_count = scope.total_count
-      @venues = scope.load
-
     end
-  end
 end

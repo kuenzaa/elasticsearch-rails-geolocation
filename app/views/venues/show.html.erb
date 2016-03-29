@@ -1,5 +1,9 @@
 <h1>Search venues</h1>
 
+<% if @total_count %>
+	<h3><%= @total_count %> venues found near <%= params[:term] %></h3>
+<% end %>
+
 <%= form_for :term, url: search_path, method: :get do |form| %>
 	<p>
 		Venues near
@@ -7,6 +11,8 @@
     <%= submit_tag "Search", name: nil %>
 	</p>
 <% end %>
+
+<hr/>
 
 <div id='search-results'>
 	<% @venues.each do |venue| %>
