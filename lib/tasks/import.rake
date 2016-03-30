@@ -12,7 +12,7 @@ namespace :import do
         venue_object = Venue.new(name: v.name, address: v.location.address, country: v.location.country, latitude: v.location.lat, longitude: v.location.lng)
 
         v.categories.each do |c|
-          venue_object.categories << Category.find_or_create_by(name: c.pluralName)
+          venue_object.categories << Category.find_or_create_by(name: c.shortname)
         end
 
         venue_object.save
